@@ -74,6 +74,13 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check static protocol page
+        run: node --test tests/protocol_page.test.mjs
+
       - name: Install PostgREST and RustFS for integration tests
         run: |
           set -euo pipefail
@@ -862,7 +869,7 @@ jobs:
           descriptor["supabase_publishable_key"] = key
 
           source = pathlib.Path("web")
-          for required in ("index.html", "publication/index.html"):
+          for required in ("index.html", "publication/index.html", "protocol/index.html", "protocol/protocol.css"):
               if not (source / required).is_file():
                   errors.append(f"web/{required} is missing.")
 
@@ -914,4 +921,16 @@ jobs:
           curl -fsS --max-time 15 -o /dev/null "${base}?v=${GITHUB_RUN_ID}"
           curl -fsS --max-time 15 -o /dev/null "${base}index.html?v=${GITHUB_RUN_ID}"
           curl -fsS --max-time 15 -o /dev/null "${base}publication/?v=${GITHUB_RUN_ID}"
-          echo "index.html and publication/ are reachable at ${base}."
+          for attempt in $(seq 1 30); do
+            if curl -fsSL --max-time 15 "${base}protocol?v=${GITHUB_RUN_ID}" -o /tmp/live-protocol.html \
+              && cmp -s /tmp/live-protocol.html _site/protocol/index.html; then
+              echo "Protocol page matches this release."
+              break
+            fi
+            if [ "${attempt}" = 30 ]; then
+              echo "::error::${base}protocol is missing or differs from this release."
+              exit 1
+            fi
+            sleep 10
+          done
+          echo "index.html, publication/, and protocol/ are reachable at ${base}."
