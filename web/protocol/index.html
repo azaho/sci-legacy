@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; object-src 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="The SCI protocol specification, with links to its pinned source on GitHub.">
+  <title>SCI protocol · SCI</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./protocol.css">
+</head>
+<body data-page="protocol">
+<a class="skip" href="#content">Skip to content</a>
+<main>
+  <header>
+    <a class="brand" href="../" aria-label="SCI home">sci</a>
+    <a class="header-title" href="../">Publications</a>
+    <a class="github-link" href="https://github.com/azaho/sci" aria-label="SCI on GitHub" title="SCI on GitHub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .75a11.25 11.25 0 0 0-3.558 21.922c.563.104.768-.244.768-.542 0-.267-.01-.975-.015-1.914-3.13.68-3.791-1.508-3.791-1.508-.512-1.3-1.25-1.646-1.25-1.646-1.023-.7.078-.686.078-.686 1.13.08 1.725 1.16 1.725 1.16 1.005 1.723 2.638 1.225 3.28.937.102-.728.393-1.225.715-1.507-2.499-.284-5.126-1.25-5.126-5.565 0-1.23.44-2.234 1.16-3.022-.116-.284-.503-1.43.11-2.98 0 0 .945-.302 3.094 1.154a10.77 10.77 0 0 1 5.634 0c2.148-1.456 3.091-1.154 3.091-1.154.615 1.55.228 2.696.112 2.98.722.788 1.158 1.792 1.158 3.022 0 4.327-2.631 5.278-5.138 5.557.404.349.764 1.038.764 2.092 0 1.51-.014 2.728-.014 3.098 0 .3.203.651.774.54A11.25 11.25 0 0 0 12 .75Z"/></svg>
+    </a>
+  </header>
+<article id="content" class="docs protocol">
+<div class="protocol-source">
+<a href="https://github.com/azaho/sci-dev/blob/e31745c09d7bda3c29b34058b6241f92a460d813/protocol/README.md"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .75a11.25 11.25 0 0 0-3.558 21.922c.563.104.768-.244.768-.542 0-.267-.01-.975-.015-1.914-3.13.68-3.791-1.508-3.791-1.508-.512-1.3-1.25-1.646-1.25-1.646-1.023-.7.078-.686.078-.686 1.13.08 1.725 1.16 1.725 1.16 1.005 1.723 2.638 1.225 3.28.937.102-.728.393-1.225.715-1.507-2.499-.284-5.126-1.25-5.126-5.565 0-1.23.44-2.234 1.16-3.022-.116-.284-.503-1.43.11-2.98 0 0 .945-.302 3.094 1.154a10.77 10.77 0 0 1 5.634 0c2.148-1.456 3.091-1.154 3.091-1.154.615 1.55.228 2.696.112 2.98.722.788 1.158 1.792 1.158 3.022 0 4.327-2.631 5.278-5.138 5.557.404.349.764 1.038.764 2.092 0 1.51-.014 2.728-.014 3.098 0 .3.203.651.774.54A11.25 11.25 0 0 0 12 .75Z"/></svg><span>View protocol specification on GitHub</span></a>
+<nav class="protocol-contents" aria-label="Protocol table of contents">
+<details>
+<summary>Contents</summary>
+<ol><li><a href="#1-roles">1. Roles</a></li><li><a href="#2-publication-bundle">2. Publication bundle</a><ol><li><a href="#21-baseline-publications">2.1 Baseline publications</a></li><li><a href="#22-single-file-bundle-zip">2.2 Single-file bundle (ZIP)</a></li></ol></li><li><a href="#3-manifest">3. Manifest</a><ol><li><a href="#31-file-paths">3.1 File paths</a></li></ol></li><li><a href="#4-publication-metadata">4. Publication metadata</a><ol><li><a href="#41-categories">4.1 Categories</a></li><li><a href="#42-text-characters">4.2 Text characters</a></li><li><a href="#43-display-items">4.3 Display items</a></li><li><a href="#44-citations">4.4 Citations</a></li></ol></li><li><a href="#5-publisher-identity">5. Publisher identity</a><ol><li><a href="#51-keys-and-signatures">5.1 Keys and signatures</a></li><li><a href="#52-external-identity-claims">5.2 External identity claims</a><ol><li><a href="#521-signed-claim">5.2.1 Signed claim</a></li><li><a href="#522-domain-method">5.2.2 Domain method</a></li><li><a href="#523-github-method">5.2.3 GitHub method</a></li><li><a href="#524-hugging-face-method">5.2.4 Hugging Face method</a></li></ol></li><li><a href="#53-key-revocation">5.3 Key revocation</a></li></ol></li><li><a href="#6-verification">6. Verification</a><ol><li><a href="#61-manifest-checks">6.1 Manifest checks</a></li><li><a href="#62-file-checks">6.2 File checks</a></li><li><a href="#63-metadata-checks">6.3 Metadata checks</a></li><li><a href="#64-complete-bundle-checks">6.4 Complete bundle checks</a></li><li><a href="#65-catalog-admission">6.5 Catalog admission</a></li><li><a href="#66-key-association-checks">6.6 Key association checks</a></li><li><a href="#67-revocation-checks">6.7 Revocation checks</a></li><li><a href="#68-timestamp-verification">6.8 Timestamp verification</a></li><li><a href="#69-service-policy">6.9 Service policy</a></li></ol></li><li><a href="#7-json-encoding-rules">7. JSON encoding rules</a></li><li><a href="#8-discovery-and-retrieval">8. Discovery and retrieval</a><ol><li><a href="#81-index-descriptor">8.1 Index descriptor</a><ol><li><a href="#811-publication-lookup">8.1.1 Publication lookup</a></li><li><a href="#812-revocation-lookup">8.1.2 Revocation lookup</a></li><li><a href="#813-timestamp-lookup">8.1.3 Timestamp lookup</a></li><li><a href="#814-publication-submission">8.1.4 Publication submission</a></li></ol></li><li><a href="#82-archive-descriptor">8.2 Archive descriptor</a><ol><li><a href="#821-descriptor-discovery">8.2.1 Descriptor discovery</a></li></ol></li></ol></li><li><a href="#acknowledgements">Acknowledgements</a></li><li><a href="#changelog">Changelog</a><ol><li><a href="#01-draft--2026-11-06">0.1 (draft) — 2026-11-06</a></li></ol></li></ol>
+</details>
+</nav>
+</div>
+<div class="readme"><h1 id="sci">SCI</h1>
+<p>SCI is an open, decentralized research publication system. Anyone can publish signed research, host copies, or build tools to find and verify publications. A shared protocol lets these independent services work together.</p>
+<h1 id="sci-protocol-specification">SCI Protocol Specification</h1>
+<p>Protocol version: <strong>0.1</strong>. This draft may change before release.</p>
+<p><code>MUST</code> states a requirement. <code>MUST NOT</code> states a prohibition.
+<code>SHOULD</code> states a recommendation. <code>MAY</code> states an option.
+These words have the meanings in <a href="https://www.rfc-editor.org/rfc/rfc2119.html">RFC 2119</a>.</p>
+<h2 id="1-roles">1. Roles</h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Publisher</td>
+<td>The party that signs a publication.</td>
+</tr>
+<tr>
+<td>Reader</td>
+<td>A program that retrieves and verifies publication files.</td>
+</tr>
+<tr>
+<td>Archiver</td>
+<td>A service that stores and serves verified publication objects.</td>
+</tr>
+<tr>
+<td>Indexer</td>
+<td>A service that derives a searchable catalog from verified records.</td>
+</tr>
+</tbody>
+</table>
+<p>One program can perform more than one role.
+A reader MUST be able to verify local files without an indexer or archiver.</p>
+<h2 id="2-publication-bundle">2. Publication bundle</h2>
+<p>A publication is identified by the SHA-256 hash of its exact manifest bytes.
+The identifier is <code>sha256:</code> followed by 64 lowercase hexadecimal characters.</p>
+<p>Corrections MUST be new publications with new manifest hashes.
+A correction MAY cite the original with <code>supersedes</code> in its <code>relations</code> array.</p>
+<p>Paths are relative to the bundle root.</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Required?</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>manifest.json</code></td>
+<td>Yes</td>
+<td>Publisher’s public key and file list.</td>
+</tr>
+<tr>
+<td><code>manifest.json.sig</code></td>
+<td>Yes</td>
+<td>Publisher’s signature, defined in <a href="#3-manifest">section 3</a>.</td>
+</tr>
+<tr>
+<td><code>sci.json</code></td>
+<td>Yes</td>
+<td>Publication metadata defined in section 4, including any display items.</td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td>Yes</td>
+<td>Main publication text as UTF-8 Markdown, following the text character rules in section 4.</td>
+</tr>
+<tr>
+<td><code>LICENSE</code></td>
+<td>For baseline</td>
+<td>License terms supplied by the publisher as UTF-8 text, following the text character rules in section 4.</td>
+</tr>
+<tr>
+<td><code>files/&lt;path&gt;</code></td>
+<td>No</td>
+<td>Supporting files, such as <code>files/results.png</code> or <code>files/data.csv</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><code>README.md</code> MUST be nonblank under <a href="#42-text-characters">section 4.2</a>.</p>
+<p>Publishing tools MUST NOT include the publication's signing private key in the bundle.
+Publishing tools SHOULD offer timestamping by default and allow the publisher to skip it or choose a timestamp authority.</p>
+<p>A publication may be distributed as individual files at the paths above or as a single uncompressed ZIP. A publisher or archiver may assemble the ZIP from the signed manifest, its signature, and the listed files.</p>
+<p>An optional <code>manifest.json.sig.tsr</code> sidecar contains timestamp proofs under <a href="#68-timestamp-verification">section 6.8</a> for the SHA-256 of the exact bytes of <code>manifest.json.sig</code>. It MAY accompany the loose files but is not part of the bundle and MUST NOT be included as a ZIP entry. When distributed alongside a named ZIP, the sidecar SHOULD use <code>&lt;digest&gt;.tsr</code>, with the same digest as <code>&lt;digest&gt;.zip</code>. Archives serve the sidecar through <code>entry_url</code> as specified in <a href="#82-archive-descriptor">section 8.2</a>.</p>
+<h3 id="21-baseline-publications">2.1 Baseline publications</h3>
+<p>The baseline defines a shared compatibility guarantee. SCI indexers and archivers MUST NOT reject publications meeting its requirements because of per-publication resource limits or the approved license terms, while other admission policies remain applicable under <a href="#69-service-policy">section 6.9</a>. Publications outside the baseline remain valid if they satisfy the other format rules; services MAY decline them under their published policy.</p>
+<p>A valid publication is baseline if it satisfies every limit below and includes <code>LICENSE</code> with the exact bytes of one of the approved licenses in this table. Hashes are SHA-256 over the exact license file bytes.</p>
+<table>
+<thead>
+<tr>
+<th>Approved license</th>
+<th>Short description</th>
+<th>SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/azaho/sci-dev/blob/e31745c09d7bda3c29b34058b6241f92a460d813/protocol/sci-baseline-LICENSE.txt">SCI baseline license 0.1</a></td>
+<td>CC BY 4.0 for text, figures, and data; MIT for code.</td>
+<td><code>8ccfd5fdaa93e5e71dc8812bf11e0a7198bd0a534fa64b8970fd2de58e6c2478</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Maximum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Complete ZIP under section 2.2</td>
+<td>64 MiB (67,108,864 bytes)</td>
+</tr>
+<tr>
+<td>Entries in the manifest's <code>files</code> object</td>
+<td>1,000</td>
+</tr>
+<tr>
+<td>Items in <code>sci.json</code>'s <code>display</code> array, if present</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>manifest.json</code></td>
+<td>256 KiB (262,144 bytes)</td>
+</tr>
+<tr>
+<td><code>sci.json</code></td>
+<td>64 KiB (65,536 bytes)</td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td>1 MiB (1,048,576 bytes)</td>
+</tr>
+</tbody>
+</table>
+<p>Display files in baseline publications MUST meet these requirements:</p>
+<table>
+<thead>
+<tr>
+<th>Extension</th>
+<th>Maximum file size</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.png</code></td>
+<td>2 MiB (2,097,152 bytes)</td>
+<td>At most 8,000,000 pixels; width and height each from 1 to 8,192 pixels.<br><br>For baseline checks, use the signature, chunk layout, and <code>IHDR</code> dimensions defined in <a href="https://www.w3.org/TR/2025/REC-png-3-20250624/">PNG, Third Edition</a>. The file MUST start with the PNG signature, followed by one <code>IHDR</code> chunk with 13 data bytes. Complete chunks MUST account for all bytes after the signature and end with one empty <code>IEND</code> chunk. No other <code>IHDR</code> or <code>IEND</code> chunk may occur. The chunks <code>acTL</code>, <code>fcTL</code>, and <code>fdAT</code> MUST NOT occur. Baseline checks do not require CRC verification, image decoding, or other PNG conformance checks.</td>
+</tr>
+</tbody>
+</table>
+<p>Compare the extension without regard to ASCII case.</p>
+<p>For a publication distributed as loose files, use the size of the exact ZIP defined in section 2.2. Tools MAY calculate this size without constructing the ZIP:</p>
+<pre><code class="language-text">zip_bytes = 22 + sum(file_bytes + 76 + 2 * path_bytes)
+</code></pre>
+<p>The sum covers every ZIP entry, including <code>manifest.json</code> and <code>manifest.json.sig</code>. <code>file_bytes</code> is the entry's content length in bytes; <code>path_bytes</code> is its full relative ASCII path length in bytes.
+Indexers and archivers MUST be able to complete the bundle checks in section 6.4 for baseline publications. They MUST NOT impose smaller limits that exclude otherwise valid baseline publications.</p>
+<p>Publishing tools MUST check the baseline requirements before signing. They SHOULD require an explicit publisher override before signing a publication that does not meet them.</p>
+<h3 id="22-single-file-bundle-zip">2.2 Single-file bundle (ZIP)</h3>
+<p>When distributing a ZIP as a named file, use <code>&lt;digest&gt;.zip</code>, where <code>&lt;digest&gt;</code> MUST be the 64 lowercase hexadecimal characters of the manifest’s SHA-256 hash.
+SCI readers MUST support this ZIP representation and be able to verify its contents even if the file has been renamed.</p>
+<p>To save an individual file, a reader MUST verify the manifest and its signature, then check the file’s byte count and SHA-256 hash against the requested path in the manifest.
+Before unpacking the whole bundle, a reader MUST verify the complete bundle as defined in <a href="#64-complete-bundle-checks">section 6.4</a>, including all of the ZIP requirements below.
+The record layouts are defined in the <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">ZIP specification, sections 4.3–4.4</a>.</p>
+<ul>
+<li>Starting at byte zero, store consecutive local file headers and their data, then the corresponding central directory file headers in the same entry order, then one end-of-central-directory record ending at the last byte. These records and file data MUST account for every byte.</li>
+<li>The first two entries MUST be <code>manifest.json</code> and <code>manifest.json.sig</code>, in that order. Next, include each file listed in the manifest exactly once, in ascending lexicographic order of its full ASCII path bytes. Omit enclosing directories, explicit directory entries, and other files.</li>
+<li>For each file listed in the manifest, the filename bytes in both ZIP headers MUST exactly match the ASCII bytes of its decoded <code>files</code> key.</li>
+<li>Use classic ZIP in a single part. All disk-number fields MUST be zero. Use method 0 (stored) and zero general-purpose flags. Extra fields and comments MUST be empty. ZIP64 records, ZIP64 sentinel values, and data descriptors are prohibited in this version of the schema.</li>
+<li>Set the complete version-made-by field to <code>0x000A</code> (MS-DOS host, version 1.0), the version needed to extract to 1.0 (10), and both internal and external file attributes to zero. Every entry represents an ordinary file.</li>
+<li>In both headers, set the last-modification date to <code>0x0021</code> and time to <code>0x0000</code> (1980-01-01 00:00:00 in DOS format).</li>
+<li>Each central entry MUST point to the start of its corresponding local header. All fields shared by the two headers MUST agree byte for byte. Both sizes MUST equal the actual data length, and the CRC-32 MUST match the data. The end-of-central-directory record MUST give the actual entry count in both count fields, the byte offset where the central directory starts, and its length in bytes.</li>
+</ul>
+<p>These rules determine the exact ZIP bytes from the exact manifest bytes, signature bytes, and listed file contents. The publication identifier remains the hash of the manifest, not the ZIP.</p>
+<h2 id="3-manifest">3. Manifest</h2>
+<p>The publisher signs <code>manifest.json</code>, a <a href="#7-json-encoding-rules">JSON</a> object with exactly these required fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema</code></td>
+<td>String</td>
+<td>Exactly <code>sci-publication/0.1</code>.</td>
+</tr>
+<tr>
+<td><code>public_key</code></td>
+<td>Object</td>
+<td>Ed25519 public JWK as defined in <a href="#51-keys-and-signatures">section 5.1</a>.</td>
+</tr>
+<tr>
+<td><code>files</code></td>
+<td>Object</td>
+<td>Maps each listed path to its SHA-256 hash and byte count.</td>
+</tr>
+</tbody>
+</table>
+<p><code>manifest.json.sig</code> contains the signature over the exact bytes of <code>manifest.json</code>, using the key in <code>public_key</code>.
+<code>manifest.json.sig</code> MUST contain exactly the raw 64 signature bytes, without text encoding or surrounding bytes.
+The signature follows <a href="#51-keys-and-signatures">section 5.1</a>.</p>
+<p>Publishers SHOULD write the members of <code>files</code> in ascending lexicographic order by the ASCII bytes of the full path.
+Each path in <code>files</code> maps to a JSON object with exactly two fields:</p>
+<ul>
+<li><code>sha256</code> is the SHA-256 hash of the file’s exact bytes, written as a string of 64 lowercase hexadecimal characters.</li>
+<li><code>bytes</code> is the file’s length in bytes, written as a decimal integer from 0 through <code>9007199254740991</code>, using digits only and no leading zeros.</li>
+</ul>
+<p>The manifest’s <code>files</code> field MUST list <code>sci.json</code> and <code>README.md</code>. It MUST also list <code>LICENSE</code> if supplied. All other entries MUST be paths under <code>files/</code>.
+A complete bundle MUST contain exactly the listed files plus the manifest and its signature.</p>
+<h3 id="31-file-paths">3.1 File paths</h3>
+<p>Paths MUST be relative to the bundle root. Use <code>/</code> to separate components.
+The full path relative to the bundle root MUST be at most 255 ASCII bytes, including <code>/</code> separators.
+Each component MUST contain one or more characters from the POSIX portable filename character set: ASCII letters, digits, period (<code>.</code>), underscore (<code>_</code>), and hyphen (<code>-</code>).</p>
+<p>Reject <code>.</code>, <code>..</code>, and components ending in a period.
+Reject <a href="https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file">Windows device names</a> in any component: <code>CON</code>, <code>PRN</code>, <code>AUX</code>, <code>NUL</code>, <code>COM1</code>–<code>COM9</code>, and <code>LPT1</code>–<code>LPT9</code>, including names followed by an extension. Compare these names without regard to ASCII case.</p>
+<p>Compare paths without regard to ASCII case when checking for conflicts. Two file paths MUST NOT be equal, and a file path MUST NOT also name a directory used by another entry. For example, <code>files/a</code> conflicts with both <code>files/A</code> and <code>files/A/b.txt</code>.
+Every occurrence of the same directory path MUST use the same capitalization. For example, <code>files/Data/a.csv</code> and <code>files/data/b.csv</code> conflict.</p>
+<h2 id="4-publication-metadata">4. Publication metadata</h2>
+<p><code>sci.json</code> is a JSON object that permits only these fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Type and rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>Yes</td>
+<td>Nonblank string, at most 200 Unicode code points.</td>
+</tr>
+<tr>
+<td><code>abstract</code></td>
+<td>Yes</td>
+<td>Nonblank string, at most 2,500 code points.</td>
+</tr>
+<tr>
+<td><code>categories</code></td>
+<td>No</td>
+<td>An array of at most three category objects, defined below.</td>
+</tr>
+<tr>
+<td><code>keywords</code></td>
+<td>No</td>
+<td>An array of at most 20 nonblank strings, each at most 64 code points.</td>
+</tr>
+<tr>
+<td><code>display</code></td>
+<td>No</td>
+<td>Ordered array of files the publisher wants readers to show first.</td>
+</tr>
+<tr>
+<td><code>citations</code></td>
+<td>No</td>
+<td>An array of at most 1,000 citation objects, defined below.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="41-categories">4.1 Categories</h3>
+<p>Each category object contains exactly two required string fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scheme</code></td>
+<td>Classification scheme identifier matching <code>[a-z][a-z0-9.-]{0,63}</code> in its entirety.</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>Nonblank category code, at most 128 Unicode code points.</td>
+</tr>
+</tbody>
+</table>
+<p>Scheme identifiers and category codes are compared exactly. Duplicate <code>(scheme, code)</code> pairs are prohibited.
+Within each scheme, entries are ordered by publisher-assigned relevance.</p>
+<p>Publishers SHOULD use the following identifiers when referring to these classification schemes:</p>
+<table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Classification scheme</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>arxiv</code></td>
+<td><a href="https://arxiv.org/category_taxonomy">arXiv Category Taxonomy</a></td>
+</tr>
+<tr>
+<td><code>anzsrc-for-2020</code></td>
+<td><a href="https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc/2020">ANZSRC 2020 Fields of Research</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-text-characters">4.2 Text characters</h3>
+<p>All decoded strings in <code>sci.json</code>, including object keys, and the decoded contents of <code>README.md</code> and <code>LICENSE</code> MUST contain only Unicode Assignables as defined in <a href="https://www.rfc-editor.org/rfc/rfc9839.html#section-4.3">RFC 9839 §4.3</a>.</p>
+<p>TAB (U+0009), LF (U+000A), and CR (U+000D) are permitted only in <code>abstract</code>, citation <code>reason</code>, <code>README.md</code>, and <code>LICENSE</code>.</p>
+<p>Implementations MUST reject text that violates these restrictions.</p>
+<p>A nonblank string MUST contain at least one permitted character other than SPACE, TAB, LF, or CR.</p>
+<h3 id="43-display-items">4.3 Display items</h3>
+<p>Each <code>display</code> item is an object with a required <code>path</code> and an optional <code>caption</code>. Only these fields are permitted.
+Each path MUST exactly match a distinct entry under <code>files/</code> in the signed manifest.
+A caption MUST be a nonblank string of at most 2,000 Unicode code points.</p>
+<h3 id="44-citations">4.4 Citations</h3>
+<p>A publication can cite other SCI publications by their publication identifiers or external work by DOI or URL.
+Publishers SHOULD prefer SCI identifiers or DOIs over URLs when available, to keep citations independent of hosting locations.</p>
+<p>A citation is a JSON object with required <code>target</code> and optional <code>relations</code> and <code>reason</code> fields. No other fields are permitted.
+<code>relations</code>, when present, MUST be an array of distinct strings from the table below. Multiple relations may apply; their order has no meaning.
+Each relation is a publisher claim about the citing publication's relationship to the cited work.</p>
+<table>
+<thead>
+<tr>
+<th>Relation</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uses</code></td>
+<td>Uses material, methods, or results from the cited work.</td>
+</tr>
+<tr>
+<td><code>reviews</code></td>
+<td>Substantively evaluates the cited work, without implying agreement or disagreement.</td>
+</tr>
+<tr>
+<td><code>supports</code></td>
+<td>Provides evidence or reasoning supporting a claim in the cited work.</td>
+</tr>
+<tr>
+<td><code>challenges</code></td>
+<td>Provides evidence or reasoning questioning a claim in the cited work.</td>
+</tr>
+<tr>
+<td><code>supersedes</code></td>
+<td>Is intended to replace the cited publication.</td>
+</tr>
+</tbody>
+</table>
+<p>An absent or empty <code>relations</code> array indicates an ordinary citation without a more specific relationship claim.
+<code>reason</code>, when present, is nonblank text of at most 1,000 code points.</p>
+<p><code>target</code> MUST use one of these exact forms:</p>
+<ul>
+<li><code>sci:sha256:&lt;hash&gt;</code>: the publication identifier from <a href="#2-publication-bundle">section 2</a>, prefixed with <code>sci:</code>.</li>
+<li><code>doi:&lt;name&gt;</code>: a DOI URI conforming to the <a href="https://doi.org/10.1000/292">DOI URI Scheme specification</a>.</li>
+<li>An HTTP or HTTPS URI under <a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-4.2">RFC 9110 section 4.2</a>, with an optional fragment under <a href="https://www.rfc-editor.org/rfc/rfc3986.html#section-3.5">RFC 3986 section 3.5</a>.</li>
+</ul>
+<p>DOI targets MUST use that specification's encoding and equivalence rules.</p>
+<h2 id="5-publisher-identity">5. Publisher identity</h2>
+<p>A publisher is identified by its Ed25519 public key.
+A signature establishes control of a key, subject to the security of that key and algorithm.
+It does not establish correctness of the published claims, content safety, or license ownership.</p>
+<p><strong>Warning:</strong> Publishers MUST protect their private keys from unauthorized access. Anyone with a private key can sign publications and revoke that key.</p>
+<h3 id="51-keys-and-signatures">5.1 Keys and signatures</h3>
+<p>Public keys MUST use the JWK representation defined in <a href="https://www.rfc-editor.org/rfc/rfc8037.html">RFC 8037</a>.
+Only <code>kty</code>, <code>crv</code>, and <code>x</code> are permitted in a public key object.
+Verifiers MUST reject noncanonical base64url encodings of <code>x</code>.</p>
+<p>Signatures MUST use the 64-byte pure Ed25519 format defined in <a href="https://www.rfc-editor.org/rfc/rfc8032.html">RFC 8032</a>.
+Signers MUST use the deterministic signing procedure in <a href="https://www.rfc-editor.org/rfc/rfc8032.html#section-5.1.6">RFC 8032 §5.1.6</a>.
+Verifiers MUST check signatures according to <a href="https://www.rfc-editor.org/rfc/rfc8032.html#section-5.1.7">RFC 8032 §5.1.7</a>.
+The public key <code>A</code> and signature point <code>R</code> MUST also be nonidentity members of the prime-order subgroup.</p>
+<p>Each signed record type MUST use distinct <code>schema</code> values.
+Before accepting a record, verifiers MUST check that its <code>schema</code> identifies the expected record type and a supported version.</p>
+<h3 id="52-external-identity-claims">5.2 External identity claims</h3>
+<p>A public key can claim affiliation with a domain or an external account.
+Claims are optional. Each account can list many keys, and each key can name many accounts.
+To verify the affiliation, the domain or account hosts a claim signed by the key that names that domain or account.
+The key’s signature and the account’s hosted file show agreement from both sides.</p>
+<p>Publishers and indexers can supply account hints for lookup. Hints do not prove an association.
+Readers and indexers MUST complete the checks in section 6.6 before displaying an association as verified.
+<strong>Warning:</strong> If a domain or account changes owners, the new owner can reuse the previous owner’s hosted claim until it expires.</p>
+<h4 id="521-signed-claim">5.2.1 Signed claim</h4>
+<p>The account hosts the claim in a <code>.json</code> file and its signature in a matching <code>.json.sig</code> file.
+The claim is a JSON object with only these fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required?</th>
+<th>Type and rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema</code></td>
+<td>Yes</td>
+<td>String, exactly <code>sci-key-claim/0.1</code>.</td>
+</tr>
+<tr>
+<td><code>public_key</code></td>
+<td>Yes</td>
+<td>Public JWK under section 5.1.</td>
+</tr>
+<tr>
+<td><code>account</code></td>
+<td>Yes</td>
+<td>Object with exactly two string fields: <code>type</code> and <code>id</code>. The account method defines their values.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>No</td>
+<td>Publisher display name. Nonblank string, at most 80 Unicode code points. Uses the <code>title</code> character rules in section 4.2.</td>
+</tr>
+<tr>
+<td><code>note</code></td>
+<td>No</td>
+<td>Nonblank string, at most 2,500 Unicode code points. Uses the <code>abstract</code> character rules in section 4.2.</td>
+</tr>
+<tr>
+<td><code>expires</code></td>
+<td>Yes</td>
+<td>String, an expiry time in <a href="https://www.rfc-editor.org/rfc/rfc3339.html#section-5.6">RFC 3339</a> format.</td>
+</tr>
+</tbody>
+</table>
+<p>Publishers SHOULD set <code>expires</code> no more than 90 days after signing.
+Expiry ends a claim's current status. A hosted claim still covers publications timestamped before <code>expires</code>, under section 6.6, so a retired key needs no renewal.
+Readers and indexers MAY impose a shorter remaining validity period as local policy.
+Readers and indexers MAY reuse a successful association check until the claim expires.</p>
+<p>The claim JSON MUST follow section 7.
+The <code>.json.sig</code> file contains the raw 64-byte signature defined in section 5.1.
+The claim's key signs the exact <code>.json</code> bytes.
+Readers MAY use the account's avatar or domain icon as an unsigned display image.</p>
+<h4 id="522-domain-method">5.2.2 Domain method</h4>
+<p><code>account.type</code> MUST be <code>domain</code>.
+<code>account.id</code> MUST contain only a lowercase ASCII DNS host name, without a final dot.
+Internationalized labels MUST use valid <a href="https://www.rfc-editor.org/rfc/rfc5890.html#section-2.3.2.1">IDNA2008 A-labels</a>. IP addresses are not permitted.</p>
+<p>The domain MUST host the claim and signature for each key at:</p>
+<pre><code class="language-text">https://&lt;account.id&gt;/.well-known/sci/keys/&lt;public_key.x&gt;.json
+https://&lt;account.id&gt;/.well-known/sci/keys/&lt;public_key.x&gt;.json.sig
+</code></pre>
+<h4 id="523-github-method">5.2.3 GitHub method</h4>
+<p><code>account.type</code> MUST be <code>github</code>.
+<code>account.id</code> MUST be the GitHub account's login in lowercase, for a user or organization.
+The account MUST host the files in either its public <code>&lt;account.id&gt;/&lt;account.id&gt;</code> or <code>&lt;account.id&gt;/.github</code> repository, on the <code>main</code> branch.
+Both locations are permitted for users and organizations:</p>
+<pre><code class="language-text">https://raw.githubusercontent.com/&lt;account.id&gt;/&lt;account.id&gt;/main/sci/keys/&lt;public_key.x&gt;.json
+https://raw.githubusercontent.com/&lt;account.id&gt;/&lt;account.id&gt;/main/sci/keys/&lt;public_key.x&gt;.json.sig
+</code></pre>
+<p>or:</p>
+<pre><code class="language-text">https://raw.githubusercontent.com/&lt;account.id&gt;/.github/main/sci/keys/&lt;public_key.x&gt;.json
+https://raw.githubusercontent.com/&lt;account.id&gt;/.github/main/sci/keys/&lt;public_key.x&gt;.json.sig
+</code></pre>
+<p>Readers and indexers MAY also use the <a href="https://docs.github.com/en/rest/repos/repos#get-a-repository">GitHub API</a> to check that the account still owns the repository.</p>
+<h4 id="524-hugging-face-method">5.2.4 Hugging Face method</h4>
+<p><code>account.type</code> MUST be <code>huggingface</code>.
+<code>account.id</code> MUST be the user or organization name, with the spelling returned by the Hub API.
+The account MUST host the files in its public <code>&lt;account.id&gt;/README</code> Space, on the <code>main</code> branch:</p>
+<pre><code class="language-text">https://huggingface.co/spaces/&lt;account.id&gt;/README/resolve/main/sci/keys/&lt;public_key.x&gt;.json
+https://huggingface.co/spaces/&lt;account.id&gt;/README/resolve/main/sci/keys/&lt;public_key.x&gt;.json.sig
+</code></pre>
+<p>Readers and indexers MAY also use the Hub API to check that the account still owns the Space.</p>
+<h3 id="53-key-revocation">5.3 Key revocation</h3>
+<p>A key holder can revoke a key with a signed record.
+Revocation is permanent.
+A revocation consists of two required files and one optional file:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Required?</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revocation.json</code></td>
+<td>Yes</td>
+<td>Revocation record.</td>
+</tr>
+<tr>
+<td><code>revocation.json.sig</code></td>
+<td>Yes</td>
+<td>Signature of the record.</td>
+</tr>
+<tr>
+<td><code>revocation.json.sig.tsr</code></td>
+<td>No</td>
+<td>Timestamp proofs for the signature under section 6.8.</td>
+</tr>
+</tbody>
+</table>
+<p><code>revocation.json</code> MUST follow section 7 and contain exactly these fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type and rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema</code></td>
+<td>String, exactly <code>sci-key-revocation/0.1</code>.</td>
+</tr>
+<tr>
+<td><code>public_key</code></td>
+<td>The public JWK of the key to revoke, under section 5.1.</td>
+</tr>
+</tbody>
+</table>
+<p><code>revocation.json.sig</code> MUST contain that key's signature over the exact bytes of <code>revocation.json</code>, under section 5.1.
+An optional <code>revocation.json.sig.tsr</code> file contains timestamp proofs under section 6.8 for the SHA-256 of the signature file.</p>
+<p>A verified key revocation MUST end the verified status of all domain and account associations for that key.
+Readers MUST mark a publication's signing key as revoked when they have a verified revocation for that key.
+A missing revocation record is not proof that a key has never been revoked.</p>
+<p>Once an indexer verifies a key revocation, it MUST reject new catalog admissions for that key.
+Publication dates and timestamp proofs MUST NOT override this rule.
+Revocation alone MUST NOT remove publications already admitted to its searchable catalog. The indexer MUST mark their signing key as revoked.
+An operator block MUST NOT be presented as a publisher's key revocation.</p>
+<p><strong>Warning:</strong> A key holder can create the signed record in advance. Keep it private until revocation is intended. Anyone with the record and signature can submit them.</p>
+<h2 id="6-verification">6. Verification</h2>
+<p>Verification lets readers and services check files and signed records without trusting the party that supplies them.</p>
+<p>Implementations MUST distinguish failed checks from checks they cannot complete.
+They MUST report an unknown <code>schema</code> value as unsupported.
+They MUST NOT report a publication as invalid only because data is unavailable or a local limit prevents a check.</p>
+<p>Assume that a publisher can deliberately construct and sign a malicious bundle.
+Verification MUST NOT execute content, open external applications, or expand nested archives. Read ZIP entries as bytes without extracting them. Use the bytes that passed verification for later rendering or extraction.
+Implementations MUST check input bounds and arithmetic for overflow before reading, seeking, or allocating memory. They MUST limit input sizes and verification work. Stop if a declared size or local limit is exceeded.</p>
+<h3 id="61-manifest-checks">6.1 Manifest checks</h3>
+<p>Before using a manifest to verify publication files, readers, archivers, and indexers MUST:</p>
+<ul>
+<li>Check the JSON encoding against <a href="#7-json-encoding-rules">section 7</a>.</li>
+<li>Check the fields, types, and values against <a href="#3-manifest">section 3</a>.</li>
+<li>Check the file paths and path conflicts against <a href="#31-file-paths">section 3.1</a>.</li>
+<li>Calculate the publication identifier from the original manifest bytes, as specified in <a href="#2-publication-bundle">section 2</a>.</li>
+<li>If an expected publication identifier was supplied, check that the calculated identifier matches it.</li>
+<li>Check the public key and manifest signature against <a href="#51-keys-and-signatures">section 5.1</a>, using the key and original manifest bytes specified in <a href="#3-manifest">section 3</a>.</li>
+</ul>
+<h3 id="62-file-checks">6.2 File checks</h3>
+<p>Before using a file as part of a publication, readers, archivers, and indexers MUST:</p>
+<ul>
+<li>Complete the <a href="#61-manifest-checks">manifest checks</a>.</li>
+<li>Check that the requested path is a key in the manifest's <code>files</code> object.</li>
+<li>Check that the retrieved byte count equals that entry's <code>bytes</code> value.</li>
+<li>Check that the SHA-256 of the retrieved bytes equals that entry's <code>sha256</code> value.</li>
+</ul>
+<p>Complete these checks before decoding or rendering the file.
+Publishing tools SHOULD check that display images decode. Readers SHOULD limit memory and processing time when decoding display images.</p>
+<h3 id="63-metadata-checks">6.3 Metadata checks</h3>
+<p>Before presenting publication metadata as verified, readers, archivers, and indexers MUST:</p>
+<ul>
+<li>Complete the <a href="#62-file-checks">file checks</a> for <code>sci.json</code>, <code>README.md</code>, and any declared <code>LICENSE</code>.</li>
+<li>Check the JSON encoding of <code>sci.json</code> against <a href="#7-json-encoding-rules">section 7</a>.</li>
+<li>Check its fields, types, and values against <a href="#4-publication-metadata">section 4</a>, including its subsections.</li>
+<li>Check <code>README.md</code> and any declared <code>LICENSE</code> against the text requirements in <a href="#2-publication-bundle">section 2</a> and <a href="#42-text-characters">section 4.2</a>.</li>
+</ul>
+<h3 id="64-complete-bundle-checks">6.4 Complete bundle checks</h3>
+<p>Before unpacking or accepting a complete bundle, readers MUST:</p>
+<ul>
+<li>For a ZIP, check the entire archive against <a href="#22-single-file-bundle-zip">section 2.2</a>.</li>
+<li>Complete the <a href="#63-metadata-checks">metadata checks</a>.</li>
+<li>Complete the <a href="#62-file-checks">file checks</a> for every path in the manifest's <code>files</code> object.</li>
+<li>Check that the bundle contains exactly the files permitted by <a href="#3-manifest">section 3</a>. For loose files, exclude the optional <code>manifest.json.sig.tsr</code> sidecar from this inventory; timestamp verification is separate under section 6.8.</li>
+</ul>
+<p>Indexers and archivers SHOULD complete these checks before accepting or serving a complete bundle.</p>
+<p>When extracting files, a reader MUST write only within the selected destination.</p>
+<h3 id="65-catalog-admission">6.5 Catalog admission</h3>
+<p>Before adding a publication to its searchable catalog, an indexer MUST:</p>
+<ul>
+<li>Complete the <a href="#63-metadata-checks">metadata checks</a>.</li>
+<li>Apply the revocation rule in <a href="#53-key-revocation">section 5.3</a>.</li>
+<li>Apply its published admission policy, including its limits, under <a href="#69-service-policy">section 6.9</a>.</li>
+</ul>
+<p>An indexer SHOULD complete the <a href="#64-complete-bundle-checks">complete bundle checks</a> before adding a publication to its searchable catalog.</p>
+<p>After catalog admission, indexers SHOULD asynchronously obtain and retain a timestamp proof verified under their trust policy if no such proof is retained. Failure MUST NOT block or reverse catalog admission.</p>
+<h3 id="66-key-association-checks">6.6 Key association checks</h3>
+<p>Before reporting a key's external association as verified, readers, archivers, and indexers MUST:</p>
+<ul>
+<li>Retrieve the claim and signature using the account method in <a href="#52-external-identity-claims">section 5.2</a>.</li>
+<li>Check the claim against section 5.2.1 and section 7.</li>
+<li>Check that the claim's decoded public key bytes equal the expected public key bytes.</li>
+<li>Check that <code>account.type</code> and <code>account.id</code> equal the requested account type and identifier.</li>
+<li>Check the claim signature under section 5.1.</li>
+<li>Check that the current time is before <code>expires</code>. Alternatively, to report that a publication falls within a hosted claim's validity, check that a timestamp verified under section 6.8 for that publication has a <code>genTime</code> before <code>expires</code>.</li>
+<li>Check that the key has no known verified revocation.</li>
+</ul>
+<p>A successful check for the same key and account MAY be reused under section 5.2.1.
+Expiry and known revocations MUST still be checked.</p>
+<h3 id="67-revocation-checks">6.7 Revocation checks</h3>
+<p>Before recording a key as revoked, readers, archivers, and indexers MUST:</p>
+<ul>
+<li>Check the record against section 5.3 and section 7.</li>
+<li>Check the public key and signature under section 5.1, using the key and original record bytes specified in section 5.3.</li>
+</ul>
+<p>Retain the verified record and signature. Keep the revoked status even if the source removes the files.</p>
+<h3 id="68-timestamp-verification">6.8 Timestamp verification</h3>
+<p>SCI timestamp files MUST contain one or more concatenated DER-encoded <code>TimeStampResp</code> values, with no other bytes. Each value MUST follow <a href="https://www.rfc-editor.org/rfc/rfc3161.html">RFC 3161</a>, as updated by <a href="https://www.rfc-editor.org/rfc/rfc5816.html">RFC 5816</a>, and MUST be checked independently when verifying the file.</p>
+<p>Readers MUST delimit values by their DER tag and length, within the bounds in section 6. If the remaining bytes do not begin with a complete DER value, readers MUST stop parsing and MUST NOT scan ahead; earlier individually verified proofs remain usable even though the file is malformed. A complete value that fails verification does not prevent checking later values.</p>
+<p>Readers MAY verify timestamp proofs.
+Before reporting a verified timestamp, readers MUST:</p>
+<ul>
+<li>Complete the <a href="#61-manifest-checks">manifest checks</a> or <a href="#67-revocation-checks">revocation checks</a>, as applicable.</li>
+<li>Check that the response status is <code>granted</code> or <code>grantedWithMods</code> and a <code>TimeStampToken</code> is present.</li>
+<li>Check that the token's <code>messageImprint</code> uses SHA-256 and matches the SHA-256 of the verified signature bytes.</li>
+<li>Verify the token under RFC 3161 and RFC 5816, including its signature, signing certificate, certificate chain, and revocation status, using local trust policy.</li>
+<li>Report the token's <code>genTime</code>, any stated accuracy, and the timestamp authority.</li>
+</ul>
+<p>Readers and services choose which timestamp authorities they trust.
+A failed timestamp check MUST NOT invalidate otherwise valid publication signatures or file hashes.
+Anyone MAY distribute timestamp proofs as a separate sidecar. Adding, replacing, or removing the sidecar changes neither the publication identifier nor the ZIP bytes.</p>
+<h3 id="69-service-policy">6.9 Service policy</h3>
+<p>Services MAY set admission requirements stricter than the format rules, subject to the baseline requirements in <a href="#21-baseline-publications">section 2.1</a>.
+They MUST publish their admission limits and license requirements.
+The baseline does not require a service to accept every publication or provide unlimited storage or throughput.</p>
+<p>Any additional policies MUST NOT be used to impose smaller per-publication size, file-count, or structural limits on baseline publications. Indexers and archivers MUST NOT reject baseline publications because of their approved license terms or require additional licensing grants as a condition of admission. Services MAY accept other licenses under their published policy.</p>
+<p>A service MUST distinguish an admission-policy refusal or a temporary capacity failure from a failed verification check.</p>
+<h2 id="7-json-encoding-rules">7. JSON encoding rules</h2>
+<p>JSON documents MUST follow <a href="https://www.rfc-editor.org/rfc/rfc8259.html">RFC 8259</a>, with these additional restrictions:</p>
+<ul>
+<li>Use UTF-8 without a byte-order mark.</li>
+<li>Reject duplicate object keys after escape decoding, at every depth.</li>
+<li>Reject unpaired UTF-16 surrogate escapes.</li>
+</ul>
+<p>Field types and permitted values are defined by each record's schema.
+Authors can choose whitespace, field order, and escape spelling within these rules.
+Hashes and signatures MUST be checked against the original JSON bytes.</p>
+<h2 id="8-discovery-and-retrieval">8. Discovery and retrieval</h2>
+<p>These interfaces let readers find and retrieve publications without custom code for each service.
+A reader can ask an index for publication sources or use an archive descriptor supplied directly.
+Services that implement these interfaces MUST follow this section.</p>
+<p>Descriptors and publication lookup responses under section 8.1.1 MUST be JSON objects under section 7.
+Descriptor URLs and expanded templates MUST be absolute URLs.
+Templates use <a href="https://www.rfc-editor.org/rfc/rfc6570.html">RFC 6570</a> with only the expressions listed for each field.</p>
+<p>Responses intended for browser readers SHOULD send <code>Access-Control-Allow-Origin: *</code>.
+For bundle range responses, they SHOULD also send <code>Access-Control-Expose-Headers: Content-Range</code>.</p>
+<h3 id="81-index-descriptor">8.1 Index descriptor</h3>
+<p>An index that supports this interface MUST publish its descriptor at:</p>
+<pre><code class="language-text">https://&lt;index&gt;/.well-known/sci/index.json
+</code></pre>
+<p>The following fields are strings:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required?</th>
+<th>Purpose</th>
+<th>Required expressions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema</code></td>
+<td>Yes</td>
+<td>Exactly <code>sci-index/0.1</code>.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>publication_lookup_url</code></td>
+<td>Yes</td>
+<td>Find archive descriptors for a publication under section 8.1.1.</td>
+<td><code>{id}</code></td>
+</tr>
+<tr>
+<td><code>revocation_lookup_url</code></td>
+<td>Yes</td>
+<td>Retrieve revocation files under section 8.1.2.</td>
+<td><code>{x}</code>, <code>{file}</code></td>
+</tr>
+<tr>
+<td><code>timestamp_lookup_url</code></td>
+<td>Yes</td>
+<td>Retrieve retained publication timestamp proofs under section 8.1.3.</td>
+<td><code>{id}</code></td>
+</tr>
+<tr>
+<td><code>submit_url</code></td>
+<td>No</td>
+<td>Submit publication locations under section 8.1.4.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>policy_url</code></td>
+<td>No</td>
+<td>Service policy, including admission limits and license requirements under section 6.9.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>docs_url</code></td>
+<td>No</td>
+<td>Documentation for the index's API and services.</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p>Additional fields MAY describe other services, such as revocation or timestamp submission.</p>
+<h4 id="811-publication-lookup">8.1.1 Publication lookup</h4>
+<p><code>id</code> is the manifest's SHA-256 hash in 64 lowercase hexadecimal characters, without the <code>sha256:</code> prefix.
+A successful GET to the expanded <code>publication_lookup_url</code> returns <code>200</code> with a <code>descriptors</code> array of archive descriptor URL strings:</p>
+<pre><code class="language-json">{&quot;descriptors&quot;: [&quot;https://archive.example/.well-known/sci/archive.json&quot;]}
+</code></pre>
+<p>Each descriptor identifies a source that may provide the requested publication.
+If the index has no sources to return, it MAY return <code>{&quot;descriptors&quot;:[]}</code> or <code>404</code>.
+Readers MUST verify retrieved files under section 6, using the requested publication ID.</p>
+<h4 id="812-revocation-lookup">8.1.2 Revocation lookup</h4>
+<p>For each key whose revocation it verifies, an index MUST retain at least one verified record and its matching signature.
+It MUST serve that pair through its revocation lookup interface.</p>
+<p><code>x</code> is the key's canonical JWK <code>x</code> value. <code>file</code> is one of the three filenames in section 5.3.
+A GET to the expanded <code>revocation_lookup_url</code> returns the original file bytes with <code>200</code>, or <code>404</code> if the index has no such file.
+Readers MUST check that the record's <code>public_key.x</code> equals the requested key and verify the record and signature under section 6.7.
+A missing record does not prove that the key has never been revoked.</p>
+<h4 id="813-timestamp-lookup">8.1.3 Timestamp lookup</h4>
+<p><code>id</code> uses section 8.1.1. A GET to the expanded <code>timestamp_lookup_url</code> returns <code>200</code> with the retained proofs for that publication's manifest signature, encoded as a timestamp file under section 6.8, or <code>404</code> if none are retained. Servers SHOULD use content type <code>application/octet-stream</code> for timestamp files. Readers MUST verify proofs under section 6.8 using the requested publication ID before reporting a verified timestamp.</p>
+<p>Indexers MAY retain a bounded selection of proofs under their published trust and resource policies. A <code>404</code> response does not prove that no timestamp exists.</p>
+<h4 id="814-publication-submission">8.1.4 Publication submission</h4>
+<p>An index MAY accept submissions through <code>submit_url</code>. If advertised, the endpoint MUST implement this section. Publishers, archivers, and other callers use the same interface; the caller need not control the signing key.</p>
+<p>Send a POST with <code>Content-Type: application/json</code> and an object under section 7 containing only these fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required?</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Yes</td>
+<td>Publication digest under section 8.1.1.</td>
+</tr>
+<tr>
+<td><code>descriptors</code></td>
+<td>Yes</td>
+<td>Nonempty array of distinct absolute archive descriptor URLs under section 8.2.</td>
+</tr>
+<tr>
+<td><code>account</code></td>
+<td>No</td>
+<td>Account object under section 5.2.1, supplied as an unsigned lookup hint.</td>
+</tr>
+</tbody>
+</table>
+<p>Apply section 6 and the service policy under section 6.9. Success confirms registration of at least one supplied location for publication lookup under section 8.1.1. Repeat submissions MUST NOT create duplicate registrations.</p>
+<p>Return <code>200</code> or <code>201</code> on success. The response MUST use <code>application/json</code> and be an object under section 7 containing <code>id</code>, the requested publication digest. Services MAY return additional fields.</p>
+<p>Errors MUST use a <code>4xx</code> or <code>5xx</code> response with <code>application/json</code> and an <code>error</code> object containing string fields <code>code</code> and <code>message</code>, and Boolean <code>retryable</code>. Codes MUST be stable.</p>
+<h3 id="82-archive-descriptor">8.2 Archive descriptor</h3>
+<p>An archive descriptor gives retrieval routes for publication files.
+The following fields are strings:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required?</th>
+<th>Meaning</th>
+<th>Permitted expressions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema</code></td>
+<td>Yes</td>
+<td>Exactly <code>sci-archive/0.1</code>.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>bundle_url</code></td>
+<td>No</td>
+<td>Complete publication ZIP under section 2.2.</td>
+<td><code>{id}</code>, <code>{id2}</code></td>
+</tr>
+<tr>
+<td><code>entry_url</code></td>
+<td>No</td>
+<td>Individual file, including the manifest, signature, and optional timestamp sidecar.</td>
+<td><code>{id}</code>, <code>{id2}</code>, <code>{+path}</code></td>
+</tr>
+<tr>
+<td><code>blob_url</code></td>
+<td>No</td>
+<td>Individual file addressed by its SHA-256 hash.</td>
+<td><code>{sha256}</code></td>
+</tr>
+<tr>
+<td><code>list_url</code></td>
+<td>No</td>
+<td>Current list of advertised publication IDs.</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><code>id</code> uses section 8.1.1. <code>id2</code> is its first two characters.
+<code>path</code> is the exact entry path relative to the bundle root. <code>sha256</code> is the file's SHA-256 hash in 64 lowercase hexadecimal characters.
+The archiver MUST serve the manifest and signature through <code>bundle_url</code> or <code>entry_url</code> for each advertised publication.
+Listed files MAY be available through any combination of routes.
+An archiver serving publication timestamp proofs MUST provide <code>entry_url</code> and serve them at <code>path = manifest.json.sig.tsr</code>. Readers MAY retrieve this sidecar separately and verify it under section 6.8.
+<code>bundle_url</code> SHOULD support single-range requests with status <code>206</code> when the range is satisfiable.</p>
+<p><code>list_url</code> returns UTF-8 text with one publication ID per LF-terminated line, using the form in section 8.1.1.</p>
+<h4 id="821-descriptor-discovery">8.2.1 Descriptor discovery</h4>
+<p>For discovery from a domain or repository, an archiver MUST publish the descriptor at the corresponding location:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Descriptor URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Domain</td>
+<td><code>https://&lt;domain&gt;/.well-known/sci/archive.json</code></td>
+</tr>
+<tr>
+<td>GitHub repository</td>
+<td><code>https://raw.githubusercontent.com/&lt;owner&gt;/&lt;repo&gt;/main/sci/archive.json</code></td>
+</tr>
+<tr>
+<td>Hugging Face repository</td>
+<td><code>&lt;repository-url&gt;/resolve/main/sci/archive.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>For Hugging Face, <code>repository-url</code> is the full model, dataset, or Space repository URL, without a trailing slash.</p>
+<p>A descriptor MAY also be supplied directly or hosted at another URL.</p>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>SCI draws on ideas explored by <a href="https://nanopub.net/">Nanopublications</a> for decentralized scientific publishing, <a href="https://github.com/nostr-protocol/nips/blob/master/01.md">Nostr</a> for signed records and public-key identity, and <a href="https://docs.ipfs.tech/concepts/immutability/">IPFS</a> for content addressing.
+Related precedents include <a href="https://book.keybase.io/docs/server">Keybase’s signed identity proofs</a>, <a href="https://www.gnupg.org/faq/gnupg-faq.html">OpenPGP revocation certificates</a>, and <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OpenID Connect Discovery’s service discovery documents</a>.</p>
+<h2 id="changelog">Changelog</h2>
+<h3 id="01-draft--2026-11-06">0.1 (draft) — 2026-11-06</h3>
+<p>Initial protocol draft. All schema versions start at <code>0.1</code>.</p>
+</div>
+</article>
+</main>
+</body>
+</html>

@@ -1,0 +1,20 @@
+.docs{max-width:900px}
+.docs h1{font-size:26px;font-weight:550}
+.docs h2{margin-top:32px}
+.docs pre{overflow-x:auto;white-space:pre}
+.protocol{overflow-wrap:anywhere}
+.protocol-source{margin:0 0 28px;padding:18px 0;border-block:1px solid var(--border)}
+.protocol-source > a{display:inline-flex;align-items:center;gap:8px;font-size:13px}
+.protocol-source svg{flex-shrink:0}
+.protocol-contents{margin-top:14px;font-size:13px}
+.protocol-contents summary{cursor:pointer;font-weight:550;width:fit-content}
+.protocol-contents summary:focus-visible{outline:2px solid var(--link);outline-offset:4px}
+.protocol-contents ol{list-style:none;margin:12px 0 0;padding:0}
+.protocol-contents li{margin:5px 0}
+.protocol-contents ol ol{margin:4px 0 8px;padding-left:18px}
+.protocol-contents details > ol{columns:2;column-gap:32px}
+.protocol-contents details > ol > li{break-inside:avoid;margin:0 0 12px}
+.protocol-contents details > ol > li > a{font-weight:550}
+@media(max-width:760px){.protocol-contents details > ol{columns:1}}
+.protocol :is(h1,h2,h3,h4,h5,h6){scroll-margin-top:24px}
+.protocol :is(th,td){overflow-wrap:normal;vertical-align:top}
