@@ -161,7 +161,7 @@ variable "publisher_size" {
 variable "repository_clone_url" {
   description = "Public HTTPS clone URL App Platform builds the publisher from."
   type        = string
-  default     = "https://github.com/azaho/sci.git"
+  default     = "https://github.com/azaho/sci-legacy.git"
 }
 
 variable "repository_branch" {
