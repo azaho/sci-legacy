@@ -715,7 +715,7 @@ export TF_VAR_instance_url=https://sci.example.org/
 export TF_VAR_cloudflare_account_id=<CLOUDFLARE_ACCOUNT_ID>
 export TF_VAR_supabase_organization_id=<SUPABASE_ORGANIZATION_ID>
 export TF_VAR_supabase_project_ref=<SUPABASE_PROJECT_REF>
-export TF_VAR_repository_clone_url=https://github.com/azaho/sci.git
+export TF_VAR_repository_clone_url=https://github.com/azaho/sci-legacy.git
 # Match any repository variables you set, e.g.:
 # export TF_VAR_archive_hostname=archive.example.org TF_VAR_archive_zone_id=<zone id>
 # export TF_VAR_deploy_publisher=true
@@ -754,3 +754,68 @@ The `r2_location` variable (default `enam`) is only a creation-time location hin
 - **Plan secrecy.** Plans are never uploaded as artifacts and the human-readable plan is not printed. Reviewers see resource addresses, actions, and changed attribute names. Inspect attribute values locally if needed.
 - **Supabase SSL enforcement** is not enabled by Terraform. All workflow and publisher connections use `sslmode=require`; enabling enforcement later is optional.
 - **Token expiry.** When a 30-day management token expires, plan/apply or the affected job fails with an authorization error; rotate the secret and rerun.
+
+
+## Repository rename: preserve the running legacy service
+
+This repository continues serving `https://sci.azaho.org/` after its rename to
+`azaho/sci-legacy`. The new SCI implementation will later take `azaho/sci`.
+Reusing that name removes the old GitHub redirect, so complete the following
+transition before assigning it to the new implementation. The service, data,
+resource names, and Terraform state do not move.
+
+The PR containing these URL changes must be reviewed before the transition,
+and merged **after** the legacy repository has been renamed. Do not merge it
+while `sci-legacy` is missing. Require passing PR checks while **deploy** is still enabled, obtain Council
+review, and get explicit owner approval before merging. These instructions are an operator runbook, not evidence that
+the rename or infrastructure update has happened.
+
+1. Record the legacy repository ID and main commit, Pages domain/settings and
+   environment rules, workflow states, DigitalOcean app source and active
+   deployment, resource identities, and Terraform workspace. Keep state,
+   credentials, and private configuration out of Git and public logs. For this
+   deployment, preserve `TF_CLOUD_ORGANIZATION=azaho-sci`,
+   `TF_WORKSPACE=sci-production`, and `SCI_INSTANCE_URL=https://sci.azaho.org/`.
+   Verify these against the live configuration before proceeding.
+2. Capture successful website, descriptor, catalog, reader, and publisher
+   health checks. Save representative publication IDs, archive URLs, and file
+   hashes for a before/after comparison. Confirm `sci-legacy` is available.
+3. Arrange a quiet window with no pushes to the legacy default branch. Record
+   and pause any provider-side source deployment triggers. Disable the legacy
+   **deploy** workflow (GitHub Actions offers **Disable workflow**), then wait
+   for running and queued deployment jobs in `sci-production-deploy` to finish. Keep the running service serving.
+   Other test workflows may continue. Disabling the workflow also prevents
+   manual dispatches; re-enable it at step 5 for the controlled operations.
+4. Rename old `azaho/sci` to `azaho/sci-legacy`. Verify the repository ID,
+   visibility, Pages custom domain `sci.azaho.org`, environment permissions and
+   allowed branches. Merge the approved URL-change PR while **deploy** is
+   disabled. Update local remotes to the renamed repository, preserving all
+   uncommitted work. Do not yet rename `sci-dev`.
+5. Re-enable **deploy** for manual operations while maintaining the no-push
+   window. GitHub does not replay the push missed while it was disabled. Run
+   operation **test** on the merged main commit, then **infrastructure-plan**.
+   The workflow derives `repository_clone_url` from `github.repository`; check
+   it resolves to `https://github.com/azaho/sci-legacy.git`. Review changed
+   resource addresses, actions, and attribute names through the existing
+   redacted plan summary. Investigate deletion, replacement, or unrelated
+   changes before applying. Do not rename the state workspace or resources,
+   remove destruction guards, or use publisher recovery for a source rename.
+6. Run **infrastructure-apply** on the same reviewed main commit. It creates a
+   fresh plan and uses the existing **production** approval gate: review that
+   run's plan before approving it. Confirm the DigitalOcean app's actual
+   source URL and active deployment, and wait for its health check. Run the
+   **website** operation to deploy the updated source/help links. Do not use
+   **release**, which also runs migrations and publisher deployment steps.
+7. Recheck all baseline service endpoints, publication IDs, file hashes, and
+   reader behavior. Check that no live dependency still uses the old repo URL.
+   Only then rename the new implementation `sci-dev` to `sci`. Recheck the
+   legacy service again after name reuse, and verify its source stays
+   `sci-legacy`. Restore the previously enabled provider-side triggers and
+   normal push/deployment activity; do not enable previously disabled triggers.
+
+If verification fails, stop before reusing `sci` and repair the configuration
+while retaining the running legacy deployment. Restore a recorded application
+revision in the existing resources if needed. After name reuse, do not blindly
+reverse the repository renames or recreate resources to recover the service.
+No banner, data migration, CLI replacement, or repository archival is part of
+this transition.
